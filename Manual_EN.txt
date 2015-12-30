@@ -1,0 +1,201 @@
+Game and Map Editor manual
+28 Sep 2014
+
+----------------------------------------------------------------------
+# - number
+$ or $n - string (without spaces)
+<a-b> - any integer number in range [a, b]
+[] - optional argument
+{a, b, c} - any of a, b, c
+a|b - a or b
+
+----------------------------------------------------------------------
+Command line arguments:
+-map <path_to_WAD_relative_to_maps_directory:\map_resource_name> - starts the game on the specified map.
+  If this argument is present, any of the following can be specified in any order:
+  -gm {DM, TDM, CTF, COOP} - game mode
+  -limt # - time limit = #
+  -lims # - score limit = #
+  -opt # - game flags concatenated in a 32-bit integer (see Doom's DMFLAGS)
+  -port <0-65535> - if this is specified, game will start up in server mode hosting on the specified port
+
+-connect $ - game will start up in client mode connecting to address $.
+  If this argument is present, any of the following can be specified in any order:
+  -port <0-65535> - client will try to connect to $:specified_port. 
+                    If this isn't present, port number will be set to 25666
+  -pw $ - password $ will be used if the server asks for one
+
+--close - closes the game after the map ends
+--debug - enables debug mode (see below)
+--testdelete - deletes the map from the WAD after the game ends. 
+               The map must be named $$$_TEST_$$$ inside the WAD. This is mainly used by the Editor.
+
+----------------------------------------------------------------------
+Console commands:
+
+Console:
+  dump [$] - saves console output to file $
+  echo [$] - prints $ in console
+  date - prints current date
+  time - prints current time
+  commands - prints available commands
+  showhistory - shows command history
+  clearhistory - clears command history
+
+Players:
+  p1_name $ - renames player 1 to $
+  p2_name $ - renames player 2 (if present) to $
+  p1_color # # # - changes player 1's color to the specified RGB value
+  p2_color # # # - same for player 2 (if present)
+  suicide - kills player 1 and player 2 (if present)
+
+HUD:
+  g_showtime {0, 1} - if 1, shows remaining round time in the upper right corner
+  g_showfps {0, 1} - if 1, shows FPS/UPS counters in the upper left corner
+  g_showscore {0, 1} - if 1, shows team score in the upper right corner
+  g_showstat {0, 1} - if 1, shows your score and related stats in the upper right corner
+  g_showkillmsg {0, 1} - if 1, enables messages in the upper left corner
+
+Game:
+  scorelimit # - changes frag/score limit to #, 0 to disable
+  timelimit # - changes timelimit to # seconds if available, 0 to disable
+  ffire {0, 1} - if 1, turns friendly fire on
+  spectate - if in a custom/net game, kills your player and places you in spectator mode
+  map $1 [$2] - starts an offline custom game on map $1:\$2.
+                              If the second $ is omitted, it's set to MAP01.
+                              If you're in a game, it will kick you out of it
+  changemap $ - if in a netgame or a custom game, ends current round and changes map to
+                $, if it is present in the current WAD
+  nextmap $ - if in a netgame or a custom game, sets the next map to $, 
+              if it is present in the current WAD. Does not end the current round
+  restart - restarts the current map
+  endgame - ends the game and returns to the main menu
+  pause - pauses the game (if allowed)
+  exit, quit - shuts the game down
+
+Bots:
+  addbot #, bot_add # - creates a bot, difficulty = #
+  bot_addred # - same, but forces the bot to join Red
+  bot_addblue # - same, but forces the bot to join Blue
+  bot_addlist $|# [red|blue] - adds bot number #/named $ from botlist.txt, optionally placing him in Red/Blue
+  bot_removeall - kicks all bots from the game
+
+Network:
+  connect $1 [#] [$2] - if currently not in a net game, tries to connect to address $1:# (e.g. asshole.com:25666).
+                        If only $1 is specified, # will be set to 25666.
+                        If $2 is specified, password $2 will be used if the server asks for any
+  reconnect - if connected to a server, kicks you out and immediately reconnects back.
+              If not, connects to the last server you've played on
+  disconnect - if connected to a server, disconnects
+  kick $ - if hosting, kicks the first player named $ it can find
+  net_interp <0-99> - changes client movement interpolation level (also see InterpolationSteps)
+
+Console text can be scrolled using PgUp/PgDn and Home/End.
+
+----------------------------------------------------------------------
+Debug mode commands:
+monster #|$ - if not in a netgame, creates a monster with type ID #/type name $ at player 1's coordinates 
+ Monster Types (TYPE_ID | TYPE_NAME | MONSTER_NAME):
+  1 | DEMON | Pinky
+  2 | IMP   | Imp
+  3 | ZOMBY | Zombie
+  4 | SERG  | Former Sergeant
+  5 | CYBER | Cyberdemon
+  6 | CGUN  | Former Commando
+  7 | BARON | Hell Baron
+  8 | KNIGHT| Hell Knight
+  9 | CACO  | Cacodemon
+  10| SOUL  | Lost Soul
+  11| PAIN  | Pain Elemental
+  12| SPIDER| Spider Mastermind
+  13| BSP   | Arachnotron
+  14| MANCUB| Mancubus
+  15| SKEL  | Revenant
+  16| VILE  | Archvile
+  17| FISH  | Fish/Piranha
+  18| BARREL| Barrel
+  19| ROBO  | Robot
+  20| MAN   | Prikolist/Traitor
+d_window - prints window position/size
+d_sounds {0, 1} - if 1, displays a sound channel usage graph
+d_frames {0, 1} - if 1, displays hitboxes around every sprite
+d_winmsg {0, 1} - if 1, prints window activity info to Doom2DF.log and Windows message logs
+d_monoff {0, 1} - if 1, disables monster AI
+
+----------------------------------------------------------------------
+Useful network settings in config.cfg
+ Server:
+  Dedicated={0, 1} - if 1, next server will be launched in dedicated mode:
+                     most things will not be drawn and no local player will be created
+  SyncWithMaster={0, 1} - if 1, server will attempt to sync with the master server
+  UpdateInterval=<1-1000> - how often server sends unreliable game updates to clients, ms (~27 recommended)
+  ReliableUpdateInterval=<1-1000> - how often server sends reliable game updates to clients, ms (~100 recommended)
+  MasterSyncInterval=<100-99999> - how often server syncs with the master (~60000 recommended)
+ Client:
+  InterpolationSteps=<0-99> - client movement smoothing level (~2 recommended) 
+
+----------------------------------------------------------------------
+Game hotkeys:
+ ESC - menu
+ F2 - save game menu
+ F3 - load game menu
+ F4 - game settings menu
+ F5 - video settings menu
+ F6 - sound settings menu
+ F7 - end current game
+ F10 - quit menu
+
+----------------------------------------------------------------------
+Editor keys:
+ LMB - draw/place/drag
+ RMB - select/resize/drag
+
+ Ctrl+RMB - multiple select
+ Shift+RMB - drag with wall collision
+
+ Del - delete selected
+ Esc - reset selection
+
+ Num 4,8,6,5 - move selected (grid steps)
+ Alt+Num 4,8,6,5 - move selected (1px steps)
+ W,A,S,D - move camera
+ 
+ Ctrl+Tab - switch object type
+ Ctrl+Q - toggle grid snap
+ Ctrl+W – toggle minimap
+ Ctrl+E – toggle grid step
+
+ Ctrl+C – copy
+ Ctrl+X – cut
+ Ctrl+V - paste
+ Ctrl+A – select all objects of current type
+ Ctrl+Alt+A – select everything
+
+ Ctrl+N – new map
+ Ctrl+M – map settings
+ Tab – map preview
+
+ Ctrl+Num 4,8,6,5 – (for triggers) move trigger with its target position
+ Ctrl+LMB – (for items/monsters/areas) create object relative to its upper left corner
+ V - (for monsters/areas) – mirror
+ Shift+LMB – (if anything selected) select object behind current selection
+ Ctrl+] - (for panels) bring selected to foreground
+ Ctrl+[ - (for panels) bring selected to background
+ 1,2,3,4,5,6,7,8,9 – toggle visibility for certain panel/object types
+ 0 – toggle visibility for everything
+
+----------------------------------------------------------------------
+Cheats:
+These work only in Single Player, Two Players, Custom Episode and, if Debug is enabled, in Custom Game.
+ echo ololo - enable cheats (not needed in Debug mode)
+ This enables following cheats (entered via keypresses during gameplay):
+  RAMBO - all weapons, ammo and keys
+  TANK - 200 health + 200 armor
+  IDDQD - invulnerability
+  BULLFROG - moonjump
+  FORMULA1 - fast running
+  GOODBYE - finish current level
+  CBVCBV - open all doors
+  UJHTW - god mode
+  <TKSQJHTK - jetpack
+  GJITKYF# - change level to level #, where # is a two-digit number (01-99)
