@@ -1,7 +1,8 @@
-@title Doom2DF 1 06.07.2021 1 1
+@title Doom2DF 1 08.03.2023 1 1
 
 @h1 NAME
-Doom2DF - Doom 2D Forever game.
+Doom2DF - main game binary.@br
+Doom2DF_H - dedicated server binary.
 
 @h1 SYNOPSIS
 Doom2DF [*ARGUMENTS*]... [*OPTION*]...@br
@@ -9,7 +10,7 @@ Doom2DF_H [*ARGUMENTS*]... [*OPTION*]...
 
 
 @h1 DESCRIPTION
-Doom 2D Forever is Doom-themed platformer game with network multiplayer support. This is the modern port of 1996 Doom 2D game by Prikol Software. Doom2DF_H is the dedicated server binary.@br
+Doom 2D Forever is Doom-themed platformer game with network multiplayer support. This is the modern port of 1996 Doom 2D game by Prikol Software.@br
 Note: documentation is not finished yet.
 
 
@@ -80,6 +81,9 @@ https://t.me/doom2d - Chat
 Our Discord:@br
 https://discord.gg/sGpJwMy
 
+@h1 SEE ALSO
+
+*d2df*(2), *d2df*(3)
 
 @h1 AUTHOR
 
