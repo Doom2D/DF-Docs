@@ -1,0 +1,58 @@
+# [GAMEMODES]
+alias dm "g_gamemode dm;g_warmup_time 16;g_maxlives 0;g_dm_keys 1;g_timelimit 900;g_scorelimit 0;sv_intertime -1;centerprint 100 GAMEMODE: DM;nextmap PrikolSoft.wad MAP01;event onmapend call cmap02;bot_removeall"
+
+# [CHANGING MAP POOL]
+alias standart "nextmap PrikolSoft.wad MAP01;event onmapend call cmap02;centerprint 100 Activated map pool: Standart"
+
+# [MAPLIST: MAIN]
+alias cmap01 "event onmapstart nextmap PrikolSoft.wad MAP01;       event onmapend call cmap02"
+alias cmap02 "event onmapstart nextmap SurMP.wad MAP01;       event onmapend call cmap03"
+alias cmap03 "event onmapstart nextmap PrikolSoft.wad MAP01;     event onmapend call cmap04"
+alias cmap04 "event onmapstart nextmap IDM.wad MAP01;          event onmapend call cmap05"
+alias cmap05 "event onmapstart nextmap DF_DM_MAPS.wad MAP08;       event onmapend call cmap01"
+
+
+# [STARTING]
+bot_removeall
+event oninter ""
+event onmapend call cmap01
+
+# [GAMESETTINGS]
+g_allow_exit 1
+g_allow_monsters 1
+g_bot_vsmonsters 1
+g_bot_vsplayers 1
+g_dm_keys 1
+g_friendlyfire 0
+g_gamemode DM
+g_item_respawn_time 60
+g_maxlives 0
+g_save_stats 1
+g_scorelimit 0
+g_screenshot_stats 1
+g_spawn_invul 0
+g_timelimit 900
+g_warmup_time 16
+g_weaponstay 1
+
+# For team modes
+g_friendly_hit_trace 1
+g_friendly_hit_projectile 1
+g_friendly_absorb_damage 1
+g_allow_dropflag 1
+
+# [SERVERSETTING]
+net_master_list mpms.doom2d.org:25665,deadsoftware.ru:25665,terminalcorner.ru:25665
+rdl_hashdb_save_enabled 1
+rdl_ignore_enabled 1
+rdl_ignore_names standart;shrshade
+sv_intertime -1
+sv_master_interval 60000
+sv_maxplrs 16
+sv_name "Default Server"
+sv_port 25667
+sv_public 1
+sv_rcon 1
+sv_rcon_password
+sv_reliable_interval 18
+sv_update_interval 0
